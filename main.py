@@ -9,16 +9,18 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"Bot is online as {bot.user}")
+    activity = discord.Activity(
+        type=discord.ActivityType.playing,
+        name="PoliteraX",
+        details="mc.politerax.ru | 1.20.1",
+        state="🌍 Военно-политический сервер с модами"
+    )
 
-    activity = discord.Game(name="Politerax | Minecraft 🌍")
     await bot.change_presence(
         status=discord.Status.online,
         activity=activity
     )
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send("Pong! 🏓")
+    print(f"Bot is online as {bot.user}")
 
-bot.run(os.environ["TOKEN"])
+bot.run(os.getenv("TOKEN"))
