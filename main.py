@@ -12,8 +12,8 @@ async def on_ready():
     activity = discord.Activity(
         type=discord.ActivityType.playing,
         name="PoliteraX",
-        details="mc.politerax.ru | 1.20.1",
-        state="🌍 Военно-политический сервер с модами"
+        details="🌍 Военно-политический сервер с модами",
+        state="mc.politerax.ru | 1.20.1"
     )
 
     await bot.change_presence(
