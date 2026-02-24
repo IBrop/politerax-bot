@@ -16,6 +16,8 @@ tree = bot.tree
 # ===== ON READY =====
 @bot.event
 async def on_ready():
+    print(f"Bot online as {bot.user}")
+
     activity = discord.Activity(
         type=discord.ActivityType.playing,
         name="PoliteraX",
@@ -23,7 +25,14 @@ async def on_ready():
         state="mc.politerax.ru | 1.20.1"
     )
 
-    await tree.sync()
+    await bot.change_presence(
+        status=discord.Status.online,
+        activity=activity
+    )
+
+    synced = await tree.sync()
+    print(f"Synced {len(synced)} commands")
+
     bot.loop.create_task(update_voice_channel())
 # ===== SLASH /stat =====
 @tree.command(name="stat", description="Статистика сервера")
