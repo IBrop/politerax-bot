@@ -51,7 +51,7 @@ async def stat(interaction: discord.Interaction):
     embed.set_footer(text="PoliteraX • Политический Minecraft сервер")
 
     await interaction.response.send_message(embed=embed)
-
+    await tree.sync(guild=discord.Object(id=1471564226689499158))
 
 # ===== ПРИВЕТСТВИЕ =====
 @bot.event
