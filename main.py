@@ -18,17 +18,17 @@ tree = bot.tree
 async def on_ready():
     print(f"Bot online as {bot.user}")
 
-    # Красивый статус
-    activity = discord.Game(name="PoliteraX | mc.politerax.ru 🌍")
-    await bot.change_presence(status=discord.Status.online, activity=activity)
+    activity = discord.Game(
+        name="PoliteraX\nmc.politerax.ru | 1.20.1"
+    )
 
-    # Синхронизация slash-команд
+    await bot.change_presence(
+        status=discord.Status.online,
+        activity=activity
+    )
+
     await tree.sync()
-
-    # Запуск авто-обновления голосового канала
     bot.loop.create_task(update_voice_channel())
-
-
 # ===== SLASH /stat =====
 @tree.command(name="stat", description="Статистика сервера")
 async def stat(interaction: discord.Interaction):
