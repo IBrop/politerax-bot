@@ -16,15 +16,11 @@ tree = bot.tree
 # ===== ON READY =====
 @bot.event
 async def on_ready():
-    print(f"Bot online as {bot.user}")
-
-    activity = discord.Game(
-        name="PoliteraX\nmc.politerax.ru | 1.20.1"
-    )
-
-    await bot.change_presence(
-        status=discord.Status.online,
-        activity=activity
+    activity = discord.Activity(
+        type=discord.ActivityType.playing,
+        name="PoliteraX",
+        details="🌍 Военно-политический сервер с модами",
+        state="mc.politerax.ru | 1.20.1"
     )
 
     await tree.sync()
