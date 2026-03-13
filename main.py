@@ -18,7 +18,8 @@ tree = bot.tree
 async def on_ready():
     print(f"Bot online as {bot.user}")
 
-    await bot.change_presence(status=discord.Status.online)
+    activity = discord.Game(name="civilizationmine.diamon.online | 1.17.1 - 1.21.1")
+    await bot.change_presence(status=discord.Status.online, activity=activity)
 
     synced = await tree.sync()
     print(f"Synced {len(synced)} commands")
