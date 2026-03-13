@@ -18,22 +18,14 @@ tree = bot.tree
 async def on_ready():
     print(f"Bot online as {bot.user}")
 
-    activity = discord.Activity(
-        type=discord.ActivityType.playing,
-        name="PoliteraX",
-        details="🌍 Военно-политический сервер с модами",
-        state="mc.politerax.ru | 1.20.1"
-    )
-
-    await bot.change_presence(
-        status=discord.Status.online,
-        activity=activity
-    )
+    await bot.change_presence(status=discord.Status.online)
 
     synced = await tree.sync()
     print(f"Synced {len(synced)} commands")
 
     bot.loop.create_task(update_voice_channel())
+
+
 # ===== SLASH /stat =====
 @tree.command(name="stat", description="Статистика сервера")
 async def stat(interaction: discord.Interaction):
@@ -51,12 +43,12 @@ async def stat(interaction: discord.Interaction):
     embed.set_footer(text="PoliteraX • Политический Minecraft сервер")
 
     await interaction.response.send_message(embed=embed)
-    await tree.sync(guild=discord.Object(id=1471564226689499158))
+
 
 # ===== ПРИВЕТСТВИЕ =====
 @bot.event
 async def on_member_join(member):
-    channel = discord.utils.get(member.guild.text_channels, name="general")  # ← поменяй если нужно
+    channel = discord.utils.get(member.guild.text_channels, name="general")
     if channel:
         await channel.send(f"👋 Добро пожаловать, {member.mention}!")
 
@@ -64,7 +56,7 @@ async def on_member_join(member):
 # ===== ПРОЩАНИЕ =====
 @bot.event
 async def on_member_remove(member):
-    channel = discord.utils.get(member.guild.text_channels, name="general")  # ← поменяй если нужно
+    channel = discord.utils.get(member.guild.text_channels, name="general")
     if channel:
         await channel.send(f"😢 {member.name} покинул сервер...")
 
@@ -73,7 +65,7 @@ async def on_member_remove(member):
 @bot.event
 async def on_member_update(before, after):
     if not before.premium_since and after.premium_since:
-        channel = discord.utils.get(after.guild.text_channels, name="general")  # ← поменяй если нужно
+        channel = discord.utils.get(after.guild.text_channels, name="general")
         if channel:
             await channel.send(f"🚀 {after.mention} забустил сервер! Спасибо!")
 
