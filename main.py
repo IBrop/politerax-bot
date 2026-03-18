@@ -10,6 +10,9 @@ bot = commands.Bot(command_prefix="/", intents=discord.Intents.default())
 SERVER_IP = "pepla4.minerent.io"
 SERVER_PORT = 31012
 
+@bot.event
+async def on_ready():
+    print("БОТ ЗАПУЩЕН")
 
 def get_status_data(state):
     if state == "online":
@@ -88,4 +91,7 @@ async def stat(ctx):
     await ctx.send(embed=embed)
 
 
-bot.run(os.getenv("TOKEN"))
+TOKEN = os.getenv("TOKEN")
+
+if not TOKEN:
+    raise Exception("❌ TOKEN НЕ НАЙДЕН")
