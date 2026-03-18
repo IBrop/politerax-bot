@@ -5,7 +5,10 @@ import asyncio
 import os
 from datetime import datetime
 
-bot = commands.Bot(command_prefix="/", intents=discord.Intents.default())
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="/", intents=intents)
 
 SERVER_IP = "pepla4.minerent.io"
 SERVER_PORT = 31012
