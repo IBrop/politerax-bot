@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from mcstatus import JavaServer
 import asyncio
+import os
+from datetime import datetime
 
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.default())
 
@@ -9,64 +11,81 @@ SERVER_IP = "pepla4.minerent.io"
 SERVER_PORT = 31012
 
 
-def get_status_emoji(status):
-    if status == "online":
-        return "🟢 Онлайн"
-    elif status == "restart":
-        return "🟡 Рестарт"
+def get_status_data(state):
+    if state == "online":
+        return "🟢 Онлайн", 0x00ff00
+    elif state == "restart":
+        return "🟡 Рестарт", 0xffcc00
     else:
-        return "🔴 Оффлайн"
+        return "🔴 Оффлайн", 0xff0000
 
 
 @bot.command()
 async def stat(ctx):
+    server = JavaServer.lookup(f"{SERVER_IP}:{SERVER_PORT}")
+
     try:
-        server = JavaServer.lookup(f"{SERVER_IP}:{SERVER_PORT}")
-
         status = server.status()
-
         state = "online"
-        status_text = get_status_emoji(state)
 
-        embed = discord.Embed(
-            title="📊 Статус сервера",
-            color=0x00ff00
-        )
+    except:
+        # пробуем ещё раз → возможно рестарт
+        await asyncio.sleep(2)
+        try:
+            status = server.status()
+            state = "restart"
+        except:
+            state = "offline"
+            status = None
 
-        embed.add_field(name="Статус", value=status_text, inline=False)
+    status_text, color = get_status_data(state)
+
+    embed = discord.Embed(
+        title="📊 LA4 • Статус сервера",
+        color=color
+    )
+
+    embed.add_field(name="Статус", value=status_text, inline=False)
+
+    if status:
         embed.add_field(
             name="Игроки",
-            value=f"{status.players.online}/{status.players.max}"
+            value=f"{status.players.online}/{status.players.max}",
+            inline=True
         )
+
         embed.add_field(
             name="Пинг",
-            value=f"{round(status.latency)} ms"
+            value=f"{round(status.latency)} ms",
+            inline=True
         )
+
         embed.add_field(
             name="Версия",
-            value=status.version.name
+            value=status.version.name,
+            inline=True
         )
 
-        await ctx.send(embed=embed)
+        # список игроков (если есть)
+        if status.players.sample:
+            players = ", ".join([p.name for p in status.players.sample])
+            embed.add_field(
+                name="Онлайн игроки",
+                value=players[:1000],
+                inline=False
+            )
 
-    except Exception as e:
-        embed = discord.Embed(
-            title="📊 Статус сервера",
-            color=0xff0000
-        )
-
-        embed.add_field(
-            name="Статус",
-            value=get_status_emoji("offline"),
-            inline=False
-        )
+    else:
         embed.add_field(
             name="Инфо",
             value="Сервер не отвечает или перезапускается",
             inline=False
         )
 
-        await ctx.send(embed=embed)
+    # время обновления
+    embed.set_footer(text=f"Обновлено: {datetime.now().strftime('%H:%M:%S')}")
+
+    await ctx.send(embed=embed)
 
 
 bot.run(os.getenv("TOKEN"))
